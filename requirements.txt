@@ -7,5 +7,4 @@ seaborn
 joblib
 Pillow
 plotly
-opencv-python
 opencv-python-headless
