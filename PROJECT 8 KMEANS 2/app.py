@@ -1,46 +1,84 @@
 import streamlit as st
 import pandas as pd
-from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
-st.title("K-Means Clustering App")
+st.set_page_config(
+    page_title="Income Clustering",
+    page_icon="📊",
+    layout="wide"
+)
 
-uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
+st.title("📊 K-Means Income Clustering")
 
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
+@st.cache_data
+def load_data():
+    return pd.read_csv("income.csv")
 
-    st.subheader("Dataset")
-    st.write(data.head())
+try:
+    df = load_data()
 
-    numeric_data = data.select_dtypes(include=['number'])
+    st.subheader("Dataset Preview")
+    st.dataframe(df.head())
 
-    n_clusters = st.slider("Select Number of Clusters", 2, 10, 3)
+    st.subheader("Original Data")
 
-    if st.button("Run K-Means"):
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-        clusters = kmeans.fit_predict(numeric_data)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.scatter(df["Age"], df["Income($)"])
+    ax.set_xlabel("Age")
+    ax.set_ylabel("Income ($)")
+    ax.set_title("Age vs Income")
+    st.pyplot(fig)
 
-        data["Cluster"] = clusters
+    n_clusters = st.slider(
+        "Select Number of Clusters",
+        min_value=2,
+        max_value=10,
+        value=3
+    )
 
-        st.subheader("Clustered Data")
-        st.write(data)
+    km = KMeans(
+        n_clusters=n_clusters,
+        random_state=42,
+        n_init=10
+    )
 
-        if numeric_data.shape[1] >= 2:
-            fig, ax = plt.subplots()
-            ax.scatter(
-                numeric_data.iloc[:, 0],
-                numeric_data.iloc[:, 1],
-                c=clusters
-            )
-            ax.scatter(
-                kmeans.cluster_centers_[:, 0],
-                kmeans.cluster_centers_[:, 1],
-                marker='X',
-                s=200
-            )
+    df["Cluster"] = km.fit_predict(df[["Age", "Income($)"]])
 
-            ax.set_xlabel(numeric_data.columns[0])
-            ax.set_ylabel(numeric_data.columns[1])
+    st.subheader("Clustered Data")
+    st.dataframe(df)
 
-            st.pyplot(fig)
+    fig2, ax2 = plt.subplots(figsize=(8, 5))
+
+    scatter = ax2.scatter(
+        df["Age"],
+        df["Income($)"],
+        c=df["Cluster"]
+    )
+
+    centers = km.cluster_centers_
+
+    ax2.scatter(
+        centers[:, 0],
+        centers[:, 1],
+        marker="X",
+        s=200
+    )
+
+    ax2.set_xlabel("Age")
+    ax2.set_ylabel("Income ($)")
+    ax2.set_title("K-Means Clustering Result")
+
+    st.pyplot(fig2)
+
+    st.subheader("Cluster Centers")
+
+    centers_df = pd.DataFrame(
+        centers,
+        columns=["Age", "Income($)"]
+    )
+
+    st.dataframe(centers_df)
+
+except Exception as e:
+    st.error(f"Error: {e}")
