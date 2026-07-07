@@ -1,3 +1,5 @@
 
 
-https://anushkabajpai634-creator-artificial-interlli-project3app-1lltum.streamlit.app/
+# CANADA PER CAPITA INCOME PREDICTION #
+
+https://artificial-intelligence-summer-internship-m2c4xsediwrgt9ylrq6u.streamlit.app/
