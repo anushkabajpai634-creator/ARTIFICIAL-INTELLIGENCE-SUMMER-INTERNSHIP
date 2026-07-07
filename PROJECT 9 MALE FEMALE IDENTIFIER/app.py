@@ -1,37 +1,68 @@
 import streamlit as st
-import joblib
 import numpy as np
 from PIL import Image
+import joblib
+
+# -------------------------
+# Page Configuration
+# -------------------------
+st.set_page_config(
+    page_title="Male vs Female Classifier",
+    page_icon="🐶",
+    layout="centered"
+)
+
+# -------------------------
+# Load Model
+# -------------------------
+model = joblib.load("PROJECT 6  DOG IDENTIFIER/cat_dog_model.pkl")
 
 IMG_SIZE = 64
 
-# Load trained model
-model = joblib.load("PROJECT 9 MALE FEMALE IDENTIFIER/Male_Female_model.pkl")
+st.title("🐱 Male vs Female Image Classifier")
+st.write("Upload an image to predict whether it is a Cat or Dog.")
 
-st.title("Male vs Female Image Classification")
-
+# -------------------------
+# Upload Image
+# -------------------------
 uploaded_file = st.file_uploader(
-    "Upload an Image",
+    "Choose an Image",
     type=["jpg", "jpeg", "png"]
 )
 
 if uploaded_file is not None:
+
+    # Read image using Pillow
     image = Image.open(uploaded_file)
 
-    st.image(image, caption="Uploaded Image", use_container_width=True)
+    # Convert to RGB (important if image is grayscale/RGBA)
+    image = image.convert("RGB")
 
-    img = np.array(image)
+    # Display image
+    st.image(image, caption="Uploaded Image", width=300)
 
-    # Convert RGB to BGR
-    img = cvtColor(img, cv2.COLOR_RGB2BGR)
+    # Resize image
+    resized = image.resize((IMG_SIZE, IMG_SIZE))
 
-    img = resize(img, (IMG_SIZE, IMG_SIZE))
+    # Convert to NumPy array
+    resized = np.array(resized)
 
-    img = img.flatten().reshape(1, -1)
+    # Flatten image for Logistic Regression
+    resized = resized.flatten()
 
-    prediction = model.predict(img)
+    # Prediction
+    prediction = model.predict([resized])[0]
 
-    if prediction[0] == 0:
-        st.success("Prediction: MALE")
+    probability = model.predict_proba([resized])[0]
+
+    # Display prediction
+    if prediction == 0:
+        st.success("🐱 Prediction: MALE")
     else:
-        st.success("Prediction: FEMALE")
+        st.success("🐶 Prediction: FEMALE")
+
+    # Display probabilities
+    st.subheader("Prediction Confidence")
+
+    st.write(f"🐱 Male Probability: **{probability[0] * 100:.2f}%**")
+    st.write(f"🐶 Female Probability: **{probability[1] * 100:.2f}%**")
