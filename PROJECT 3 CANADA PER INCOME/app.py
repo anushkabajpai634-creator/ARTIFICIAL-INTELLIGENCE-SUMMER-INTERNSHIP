@@ -12,7 +12,7 @@ st.set_page_config(
 st.title("📈 Canada Per Capita Income Prediction")
 
 try:
-    df = pd.read_csv("canada_per_capita_income.csv")
+    df = pd.read_csv("PROJECT 3 CANADA PER INCOME/canada_per_capita_income.csv")
 
     st.subheader("Dataset Preview")
     st.dataframe(df.head())
