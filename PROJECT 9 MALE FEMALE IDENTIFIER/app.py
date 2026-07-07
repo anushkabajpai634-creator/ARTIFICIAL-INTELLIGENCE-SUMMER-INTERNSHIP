@@ -23,9 +23,9 @@ if uploaded_file is not None:
     img = np.array(image)
 
     # Convert RGB to BGR
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    img = cvtColor(img, cv2.COLOR_RGB2BGR)
 
-    img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+    img = resize(img, (IMG_SIZE, IMG_SIZE))
 
     img = img.flatten().reshape(1, -1)
 
