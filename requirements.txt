@@ -6,7 +6,6 @@ numpy
 seaborn
 joblib
 opencv-python-headless
-opencv-python
 Pillow
 plotly
 
