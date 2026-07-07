@@ -15,7 +15,7 @@ st.set_page_config(
 # -------------------------
 # Load Model
 # -------------------------
-model = joblib.load("PROJECT 6  DOG IDENTIFIER/cat_dog_model.pkl")
+model = joblib.load("PROJECT 9 MALE FEMALE IDENTIFIER/Male_Female_model.pkl")
 
 IMG_SIZE = 64
 
