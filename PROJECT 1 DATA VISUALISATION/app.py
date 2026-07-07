@@ -8,7 +8,7 @@ st.title("📱 Google Play Store Data Visualization Dashboard")
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("googleplaystore_v2.csv")
+    df = pd.read_csv("PROJECT 1 DATA VISUALISATION/googleplaystore_v2.csv")
 
     # Data Cleaning
     df = df.dropna(subset=["Rating"])
