@@ -13,7 +13,7 @@ st.write("Remove outliers using percentile method.")
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("AB_NYC_2019.csv")
+    return pd.read_csv("PROJECT 2 OUTLIERS PERCENTILE/AB_NYC_2019.csv")
 
 df = load_data()
 
