@@ -2,73 +2,104 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(page_title="Outlier Detection using Percentile", layout="wide")
-
-st.title("📊 Outlier Detection Using Percentile Method")
-
-uploaded_file = st.file_uploader(
-    "Upload AB_NYC_2019.csv",
-    type=["csv"]
+st.set_page_config(
+    page_title="Outlier Detection Using Percentiles",
+    page_icon="📊",
+    layout="wide"
 )
 
-if uploaded_file is not None:
+st.title("📊 Airbnb NYC Outlier Detection Dashboard")
+st.write("Remove outliers using percentile method.")
 
-    df = pd.read_csv(uploaded_file)
+@st.cache_data
+def load_data():
+    return pd.read_csv("AB_NYC_2019.csv")
 
-    st.subheader("Original Dataset")
-    st.write(df.head())
+df = load_data()
 
-    if "price" not in df.columns:
-        st.error("Dataset must contain a 'price' column.")
-    else:
+st.subheader("Dataset Preview")
+st.dataframe(df.head())
 
-        st.subheader("Price Statistics Before Removing Outliers")
-        st.write(df["price"].describe())
+st.sidebar.header("Settings")
 
-        fig1 = px.box(
-            df,
-            y="price",
-            title="Price Distribution Before Removing Outliers"
-        )
-        st.plotly_chart(fig1, use_container_width=True)
+column = st.sidebar.selectbox(
+    "Select Numerical Column",
+    df.select_dtypes(include=["int64", "float64"]).columns
+)
 
-        min_threshold, max_threshold = df["price"].quantile([0.01, 0.999])
+lower_percentile = st.sidebar.slider(
+    "Lower Percentile",
+    0.0,
+    10.0,
+    1.0,
+    0.1
+)
 
-        st.write(f"**1st Percentile:** {min_threshold:.2f}")
-        st.write(f"**99.9th Percentile:** {max_threshold:.2f}")
+upper_percentile = st.sidebar.slider(
+    "Upper Percentile",
+    90.0,
+    100.0,
+    99.0,
+    0.1
+)
 
-        df_clean = df[
-            (df["price"] > min_threshold) &
-            (df["price"] < max_threshold)
-        ]
+lower_limit = df[column].quantile(lower_percentile / 100)
+upper_limit = df[column].quantile(upper_percentile / 100)
 
-        st.subheader("Dataset After Removing Outliers")
+filtered_df = df[
+    (df[column] >= lower_limit) &
+    (df[column] <= upper_limit)
+]
 
-        col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
-        with col1:
-            st.metric("Original Rows", len(df))
+with col1:
+    st.metric("Original Rows", len(df))
 
-        with col2:
-            st.metric("Rows After Cleaning", len(df_clean))
+with col2:
+    st.metric("Rows After Cleaning", len(filtered_df))
 
-        st.write(df_clean.head())
+with col3:
+    st.metric("Outliers Removed", len(df) - len(filtered_df))
 
-        st.subheader("Price Statistics After Removing Outliers")
-        st.write(df_clean["price"].describe())
+st.subheader("Before Outlier Removal")
 
-        fig2 = px.box(
-            df_clean,
-            y="price",
-            title="Price Distribution After Removing Outliers"
-        )
-        st.plotly_chart(fig2, use_container_width=True)
+fig1 = px.box(
+    df,
+    y=column,
+    title=f"{column} Distribution (Original)"
+)
+st.plotly_chart(fig1, use_container_width=True)
 
-        csv = df_clean.to_csv(index=False).encode("utf-8")
+st.subheader("After Outlier Removal")
 
-        st.download_button(
-            label="📥 Download Cleaned Dataset",
-            data=csv,
-            file_name="cleaned_airbnb_data.csv",
-            mime="text/csv"
-        )
+fig2 = px.box(
+    filtered_df,
+    y=column,
+    title=f"{column} Distribution (Cleaned)"
+)
+st.plotly_chart(fig2, use_container_width=True)
+
+st.subheader("Statistics")
+
+c1, c2 = st.columns(2)
+
+with c1:
+    st.write("### Original Data")
+    st.dataframe(df[column].describe())
+
+with c2:
+    st.write("### Cleaned Data")
+    st.dataframe(filtered_df[column].describe())
+
+st.subheader("Cleaned Dataset")
+st.dataframe(filtered_df.head(20))
+
+csv = filtered_df.to_csv(index=False).encode("utf-8")
+
+st.download_button(
+    label="📥 Download Cleaned Dataset",
+    data=csv,
+    file_name="cleaned_airbnb_data.csv",
+    mime="text/csv"
+)
