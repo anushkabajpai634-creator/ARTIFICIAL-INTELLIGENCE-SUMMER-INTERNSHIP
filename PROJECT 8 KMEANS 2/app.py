@@ -13,7 +13,7 @@ st.title("📊 K-Means Income Clustering")
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("income.csv")
+    return pd.read_csv("PROJECT 8 KMEANS 2/income.csv")
 
 try:
     df = load_data()
