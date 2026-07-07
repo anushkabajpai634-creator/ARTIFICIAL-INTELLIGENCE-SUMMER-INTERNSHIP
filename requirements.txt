@@ -8,4 +8,4 @@ joblib
 opencv-python-headless
 Pillow
 plotly
-opencv-python
+
