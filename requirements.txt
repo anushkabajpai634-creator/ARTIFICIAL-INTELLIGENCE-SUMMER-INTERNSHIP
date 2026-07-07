@@ -9,3 +9,4 @@ opencv-python-headless
 opencv-python
 Pillow
 plotly
+libgl1
