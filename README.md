@@ -12,3 +12,6 @@ https://artificial-intelligence-summer-internship-uzitrquk7rd3wgkapgdy.streamlit
 
 EMPLOYEE RETENTION PREDICTION
 https://anushkabajpai634-creator-art-project5linearregressionapp-bmjmao.streamlit.app/
+
+CAT DOG IMAGE CLASSIFIER
+https://anushkabajpai634-creator-art-project6catdogidentifierapp-ay0qsg.streamlit.app/
