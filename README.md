@@ -27,3 +27,7 @@ https://anushk-project9malefemaleidentifierapp-ejaanh.streamlit.app/
 
 GENDER CLASSIFICATION APP
 https://malefemale.streamlit.app/
+
+COVID DETECTOR APP CNN https://anushkabajpai634-creator-proje-project11coviddetectorapp-rv3lrv.streamlit.app/
+
+EYE DETECTOR APP CNN https://anushkabajpai634-creator-artif-project12eyeclassifierapp-nl4pjb.streamlit.app/
