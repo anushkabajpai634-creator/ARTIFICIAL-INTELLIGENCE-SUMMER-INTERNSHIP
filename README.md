@@ -21,3 +21,6 @@ https://anushkabajpai634-creator-artificial-i-project7kmeans1app-sxxaeg.streamli
 
 CLUSTERING USING K-MEANS
 https://anushkabajpai634-creator-artificial-i-project8kmeans2app-aibvmc.streamlit.app/
+
+MALE VS FEMALE IMAGE CLASSIFIER
+https://anushk-project9malefemaleidentifierapp-ejaanh.streamlit.app/
