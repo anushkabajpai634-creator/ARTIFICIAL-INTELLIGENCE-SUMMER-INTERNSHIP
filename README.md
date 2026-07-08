@@ -18,3 +18,6 @@ https://anushkabajpai634-creator-art-project6catdogidentifierapp-ay0qsg.streamli
 
 IRIS FLOWER CLUSTERING USING K-MEANS
 https://anushkabajpai634-creator-artificial-i-project7kmeans1app-sxxaeg.streamlit.app/
+
+CLUSTERING USING K-MEANS
+https://anushkabajpai634-creator-artificial-i-project8kmeans2app-aibvmc.streamlit.app/
