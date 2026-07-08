@@ -24,3 +24,6 @@ https://anushkabajpai634-creator-artificial-i-project8kmeans2app-aibvmc.streamli
 
 MALE VS FEMALE IMAGE CLASSIFIER
 https://anushk-project9malefemaleidentifierapp-ejaanh.streamlit.app/
+
+GENDER CLASSIFICATION APP
+https://malefemale.streamlit.app/
