@@ -6,3 +6,6 @@ https://anushkabajpai634-creator-a-project2outlierspercentileapp-7xxomg.streamli
 
 CANADA PER CAPITA INCOME PREDICTION
 https://artificial-intelligence-summer-internship-m2c4xsediwrgt9ylrq6u.streamlit.app/
+
+EMPLOYEE RETENTION PREDICTION
+https://artificial-intelligence-summer-internship-uzitrquk7rd3wgkapgdy.streamlit.app/
