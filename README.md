@@ -9,3 +9,6 @@ https://artificial-intelligence-summer-internship-m2c4xsediwrgt9ylrq6u.streamlit
 
 EMPLOYEE RETENTION PREDICTION
 https://artificial-intelligence-summer-internship-uzitrquk7rd3wgkapgdy.streamlit.app/
+
+EMPLOYEE RETENTION PREDICTION
+https://anushkabajpai634-creator-art-project5linearregressionapp-bmjmao.streamlit.app/
