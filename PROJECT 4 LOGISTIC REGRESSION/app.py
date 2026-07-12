@@ -1,115 +1,92 @@
 import streamlit as st
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 
 st.set_page_config(
     page_title="Employee Retention Predictor",
     page_icon="👨‍💼",
-    layout="wide"
+    layout="centered"
 )
 
 st.title("👨‍💼 Employee Retention Prediction")
-st.write("Predict whether an employee will leave the company.")
+st.write("Predict whether an employee is likely to leave the company.")
 
+# Load Dataset
 @st.cache_data
 def load_data():
-    return pd.read_csv("PROJECT 4 LOGISTIC REGRESSION/HR_comma_sep.csv")
+    return pd.read_csv("HR_comma_sep.csv")
 
-try:
-    df = load_data()
+df = load_data()
 
-    st.subheader("Dataset Preview")
-    st.dataframe(df.head())
+# Data preprocessing
+subdf = df[['satisfaction_level',
+            'average_montly_hours',
+            'promotion_last_5years',
+            'salary']]
 
-    # Convert categorical columns
-    df_model = pd.get_dummies(
-        df,
-        columns=["salary"],
-        drop_first=True
-    )
+salary_dummies = pd.get_dummies(subdf['salary'], prefix='salary')
 
-    X = df_model.drop("left", axis=1)
-    y = df_model["left"]
+X = pd.concat([
+    subdf.drop('salary', axis=1),
+    salary_dummies
+], axis=1)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=0.2,
-        random_state=42
-    )
+y = df['left']
 
-    model = LogisticRegression(max_iter=1000)
-    model.fit(X_train, y_train)
+# Train Model
+model = LogisticRegression(max_iter=1000)
+model.fit(X, y)
 
-    accuracy = model.score(X_test, y_test)
+st.header("Enter Employee Details")
 
-    st.success(f"Model Accuracy: {accuracy:.2%}")
+satisfaction = st.slider(
+    "Satisfaction Level",
+    0.0, 1.0, 0.5
+)
 
-    st.subheader("Enter Employee Details")
+hours = st.slider(
+    "Average Monthly Hours",
+    80,
+    320,
+    200
+)
 
-    satisfaction_level = st.slider(
-        "Satisfaction Level", 0.0, 1.0, 0.5
-    )
+promotion = st.selectbox(
+    "Promotion in Last 5 Years",
+    [0, 1]
+)
 
-    last_evaluation = st.slider(
-        "Last Evaluation", 0.0, 1.0, 0.5
-    )
+salary = st.selectbox(
+    "Salary Level",
+    ["low", "medium", "high"]
+)
 
-    number_project = st.number_input(
-        "Number of Projects", 1, 10, 3
-    )
+# Create input dataframe
+input_df = pd.DataFrame({
+    'satisfaction_level': [satisfaction],
+    'average_montly_hours': [hours],
+    'promotion_last_5years': [promotion],
+    'salary_low': [1 if salary == 'low' else 0],
+    'salary_medium': [1 if salary == 'medium' else 0],
+    'salary_high': [1 if salary == 'high' else 0]
+})
 
-    average_montly_hours = st.number_input(
-        "Average Monthly Hours", 50, 350, 200
-    )
+# Ensure column order matches training data
+input_df = input_df[X.columns]
 
-    time_spend_company = st.number_input(
-        "Years at Company", 1, 15, 3
-    )
+if st.button("Predict"):
 
-    Work_accident = st.selectbox(
-        "Work Accident",
-        [0, 1]
-    )
+    prediction = model.predict(input_df)[0]
+    probability = model.predict_proba(input_df)[0]
 
-    promotion_last_5years = st.selectbox(
-        "Promotion in Last 5 Years",
-        [0, 1]
-    )
+    if prediction == 1:
+        st.error("⚠️ Employee is likely to Leave the Company.")
+    else:
+        st.success("✅ Employee is likely to Stay with the Company.")
 
-    salary = st.selectbox(
-        "Salary Level",
-        ["low", "medium", "high"]
-    )
+    st.subheader("Prediction Probability")
+    st.write(f"Stay : **{probability[0]*100:.2f}%**")
+    st.write(f"Leave: **{probability[1]*100:.2f}%**")
 
-    salary_medium = 1 if salary == "medium" else 0
-    salary_high = 1 if salary == "high" else 0
-
-    if st.button("Predict"):
-
-        employee = [[
-            satisfaction_level,
-            last_evaluation,
-            number_project,
-            average_montly_hours,
-            time_spend_company,
-            Work_accident,
-            promotion_last_5years,
-            salary_medium,
-            salary_high
-        ]]
-
-        prediction = model.predict(employee)[0]
-        probability = model.predict_proba(employee)[0][1]
-
-        if prediction == 1:
-            st.error(
-                f"Employee is likely to leave.\nProbability: {probability:.2%}"
-            )
-        else:
-            st.success(
-                f"Employee is likely to stay.\nProbability of leaving: {probability:.2%}"
-            )
-
-except Exception as e:
-    st.error(f"Error: {e}")
+st.markdown("---")
+st.caption("Built with Streamlit & Scikit-learn")
