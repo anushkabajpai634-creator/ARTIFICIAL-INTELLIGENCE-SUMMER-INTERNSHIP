@@ -14,7 +14,7 @@ st.write("Predict whether an employee is likely to leave the company.")
 # Load Dataset
 @st.cache_data
 def load_data():
-    return pd.read_csv("HR_comma_sep.csv")
+    return pd.read_csv("PROJECT 4 LOGISTIC REGRESSION/HR_comma_sep.csv")
 
 df = load_data()
 
